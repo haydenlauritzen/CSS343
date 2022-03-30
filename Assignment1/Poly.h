@@ -145,7 +145,7 @@ class Poly {
      * @param coeff - Coefficient of term to set.
      * @param degree - Degree of term to set the coefficient of.
      */
-    void setCoeff(int, i`nt);
+    void setCoeff(int, int);
 
     /**
      * @brief Empties the polynomial
