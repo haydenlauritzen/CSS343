@@ -128,6 +128,11 @@ class Poly {
      */
     int getCoeff(int) const;
     /**
+     * @brief Get the coefficient of the last term
+     * @return int - coeffient of last term.
+     */
+    int getCoeff() const;
+    /**
      * @brief Get the size of the polynomial
      * Equivalent to the degree of the polynomial + 1.
      * @return int - Size of the polynomial.

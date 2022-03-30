@@ -1,4 +1,4 @@
-#include"Poly.h"
+#include "poly.h"
 
 Poly::Poly() : m_size(1)
 {
@@ -18,34 +18,37 @@ Poly::Poly(int coeff) : m_size(1)
 
 Poly::Poly(const Poly& p) : m_size(p.getSize())
 {
-    m_terms = new int[p.getSize()];
-    for(int i = 0; i < p.getSize(); i++) {
+    m_terms = new int[m_size]{Poly::EMPTY};
+    for(int i = 0; i < m_size; i++) {
         m_terms[i] = p.getCoeff(i);
-    }  
+    }
 }
 
 Poly::~Poly() 
 {
     delete m_terms;
+    m_terms = nullptr;
 }
 
 Poly Poly::operator+(const Poly& p) const
 {
     // Iterates through the polynomial and adds the coefficients of each term.
-    Poly newPoly(p.getCoeff, p.getSize-1);
+    Poly newPoly(p.getCoeff(), p.getSize()-1);
     for(int i = 0; i < p.getSize(); ++i)
     {
         newPoly.setCoeff(this->getCoeff() + p.getCoeff(), i);
     }
+    return *this;
 }
 Poly Poly::operator-(const Poly& p) const
 {
     // Iterates through the polynomial and subtracts the coefficients of each term.
-    Poly newPoly(p.getCoeff, p.getSize-1);
+    Poly newPoly(p.getCoeff(), p.getSize()-1);
     for(int i = 0; i < p.getSize(); ++i)
     {
         newPoly.setCoeff(this->getCoeff() - p.getCoeff(), i);
     }
+    return *this;
 }
 Poly Poly::operator*(const Poly& p) const
 {
@@ -60,27 +63,35 @@ Poly Poly::operator*(const Poly& p) const
             newPoly.setCoeff(this->getCoeff() * p.getCoeff(), i + j);
         }
     }
+    return *this;
 }
 
 Poly& Poly::operator=(const Poly& p) 
 {
-    // Calls the copy constructor
-    return this->Poly(p);
+    // deallocate memory
+    delete m_terms;
+    m_terms = nullptr;
+    m_size = p.getSize();
+    m_terms = new int[this->getSize()];
+    for(int i = 0; i < this->getSize(); i++) {
+        m_terms[i] = p.getCoeff(i);
+    }
+    return *this; 
 }
 Poly& Poly::operator+=(const Poly& p)
 {
-    // Calls addition operator overload and copy constructor.
-    return this->Poly(this->operator+(p));
+    // Calls addition operator overload and assignment overload.
+    return this->operator=(this->operator+(p));
 }
-Poly& Poly::operator-=(const Poly&)
+Poly& Poly::operator-=(const Poly& p)
 {
-    // Calls subtract operator overload and copy constructor.
-    return this->Poly(this->operator-(p));
+    // Calls subtract operator overload and assignment overload.
+    return this->operator=(this->operator-(p));
 }
-Poly& Poly::operator*=(const Poly&)
+Poly& Poly::operator*=(const Poly& p)
 {
-    // Calls addition operator overload and copy constructor.
-    return this->Poly(this->operator*(p));
+    // Calls addition operator overload and assignment overload.
+    return this->operator=(this->operator*(p));
 }
 
 bool Poly::operator==(const Poly& p)
@@ -105,31 +116,31 @@ bool Poly::operator!=(const Poly& p)
 std::ostream& operator<<(std::ostream& os, const Poly& p)
 {
     // Counts number of terms in polynomial for delimiters.
-    int numTerms;
-    for(int term : p) 
+    int numTerms = 0;
+    for(int i = 0; i < p.getSize(); ++i)  
     {
-        if(term != 0) ++numTerms;
+        if(p.m_terms[i] != 0) ++numTerms;
     }
     // Iterate backwards through the polynomial
-    for(int degree = this->getSize()-1; degree >= 0; ++degree) 
+    for(int degree = p.getSize()-1; degree >= 0; --degree) 
     {
         // If coefficient is 0, skip to the next term
-        if(this->getCoeff(degree) == 0) continue;
+        if(p.getCoeff(degree) == 0) continue;
         switch(degree)
         {
         case 0:
-            std::cout << this->getCoeff(degree);
+            std::cout << p.getCoeff(degree);
             break;
         case 1:
-            std::cout << this->getCoeff(degree) << "x";
+            std::cout << p.getCoeff(degree) << "x";
             break;
         default:
-            std::cout << this->getCoeff(degree) << "x^" << degree;
+            std::cout << p.getCoeff(degree) << "x^" << degree;
             break;
         }
-        if(numTerms > 0)
+        if(numTerms > 1)
         {
-            std::cout << " + ";
+            std::cout << " + "; // TODO '-' 
             --numTerms;
         }
     }
@@ -137,8 +148,12 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
 }
 int Poly::getCoeff(int degree) const
 {
-    if(degree > m_size + 2) throw std::out_of_range("Degree out of Bounds.");
-    return this->m_terms[degree+1];
+    if(degree > m_size + 1) throw std::out_of_range("Degree out of Bounds.");
+    return this->m_terms[degree];
+}
+int Poly::getCoeff() const
+{
+    return this->m_terms[this->getSize()-1];
 }
 int Poly::getSize() const
 {
@@ -147,6 +162,18 @@ int Poly::getSize() const
 
 std::istream& operator>>(std::istream& is, Poly& p)
 {
+    int coeff, degree;
+    while(!std::cin.eof())
+    {
+        std::cin >> coeff >> degree;
+        if(degree == -1 && coeff == -1) break;
+        if(degree > p.getSize() + 1)
+        {
+            //TODO increase
+        }
+        p.setCoeff(coeff, degree);
+
+    } 
     return is;
 }
 void Poly::setCoeff(int coeff, int degree)
@@ -157,7 +184,7 @@ void Poly::setCoeff(int coeff, int degree)
     }
     else
     {
-        m_size[degree] = coeff;    
+        m_terms[degree] = coeff;    
     }
 }
 
