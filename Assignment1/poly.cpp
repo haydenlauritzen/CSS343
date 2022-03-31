@@ -26,7 +26,7 @@ Poly::Poly(const Poly& p) : m_size(p.getSize())
 
 Poly::~Poly() 
 {
-    delete m_terms;
+    delete[] m_terms;
     m_terms = nullptr;
 }
 
@@ -118,7 +118,7 @@ Poly Poly::operator-(const Poly& p) const
 Poly& Poly::operator=(const Poly& p) 
 {
     // deallocate memory
-    delete m_terms;
+    delete[] m_terms;
     m_terms = nullptr;
     m_size = p.getSize();
     m_terms = new int[this->getSize()];
@@ -278,7 +278,7 @@ void Poly::setCoeff(int coeff, int degree)
 
 void Poly::clear() 
 {
-    delete m_terms;
+    delete[] m_terms;
     m_terms = new int[1]{Poly::EMPTY};
     m_size = 1;
 
