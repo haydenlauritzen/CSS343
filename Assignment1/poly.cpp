@@ -32,38 +32,87 @@ Poly::~Poly()
 
 Poly Poly::operator+(const Poly& p) const
 {
+    // Finds degree of final sum, which is the largest degree
+    int finalSize = (this->getSize() > p.getSize()) ? this->getSize() : p.getSize();
+    /* 
+     * Finds greatest common term between polynomials; 
+     * no arithmetic needs to occur after this term
+     * and helps avoid out-of-bounds memory access.
+    */
+    int greatestCommonTerm = this->getSize() < p.getSize() ? this->getSize()-1 : p.getSize()-1;
+    Poly newPoly(this->getCoeff(), finalSize-1);
     // Iterates through the polynomial and adds the coefficients of each term.
-    Poly newPoly(p.getCoeff(), p.getSize()-1);
-    for(int i = 0; i < p.getSize(); ++i)
+    for(int i = 0; i < greatestCommonTerm; ++i)
     {
-        newPoly.setCoeff(this->getCoeff() + p.getCoeff(), i);
+        newPoly.setCoeff(this->getCoeff(i) + p.getCoeff(i), i);
     }
-    return *this;
+    // Copy rest of lhs as rhs is 0
+    if(this->getSize() > p.getSize()) 
+    {
+        for(int i = greatestCommonTerm; i < this->getSize(); ++i) 
+        {
+            newPoly.setCoeff(this->getCoeff(i), i);
+        }
+    }
+    // Copy rest of rhs as lhs is 0.
+    else if(this->getSize() < p.getSize())
+    {
+        for(int i = greatestCommonTerm; i < p.getSize(); ++i) 
+        {
+            newPoly.setCoeff(p.getCoeff(i), i);
+        }
+    }
+    return newPoly;
 }
 Poly Poly::operator-(const Poly& p) const
 {
-    // Iterates through the polynomial and subtracts the coefficients of each term.
-    Poly newPoly(p.getCoeff(), p.getSize()-1);
-    for(int i = 0; i < p.getSize(); ++i)
+    // Finds degree of final sum, which is the largest degree
+    int finalSize = (this->getSize() > p.getSize()) ? this->getSize() : p.getSize();
+    /* 
+     * Finds greatest common term between polynomials; 
+     * no arithmetic needs to occur after this term
+     * and helps avoid out-of-bounds memory access.
+    */
+    int greatestCommonTerm = this->getSize() < p.getSize() ? this->getSize()-1 : p.getSize()-1;
+    Poly newPoly(this->getCoeff(), finalSize-1);
+    // Iterates through the polynomial and adds the coefficients of each term.
+    for(int i = 0; i < greatestCommonTerm; ++i)
     {
-        newPoly.setCoeff(this->getCoeff() - p.getCoeff(), i);
+        newPoly.setCoeff(this->getCoeff(i) - p.getCoeff(i), i);
     }
-    return *this;
-}
-Poly Poly::operator*(const Poly& p) const
+    // Copy rest of lhs as rhs is 0
+    if(this->getSize() > p.getSize()) 
+    {
+        for(int i = greatestCommonTerm; i < this->getSize(); ++i) 
+        {
+            newPoly.setCoeff(this->getCoeff(i), i);
+        }
+    }
+    // Copy rest of rhs as lhs is 0.
+    else if(this->getSize() < p.getSize())
+    {
+        for(int i = greatestCommonTerm; i < p.getSize(); ++i) 
+        {
+            newPoly.setCoeff(p.getCoeff(i), i);
+        }
+    }
+    return newPoly;
+}Poly Poly::operator*(const Poly& p) const
 {
     // Iterates through the polynomial and multiplies the coefficients of each term.
     Poly newPoly(Poly::EMPTY, this->getSize() + p.getSize() - 1); 
-    // equivalent to (size - 1) + (size - 1) + 1
+    // equivalent to (size - 1) + (size - 1) +1
     // Begin FOIL of polynomials
     for(int i = 0; i < this->getSize(); ++i)
     {
-        for(int j = 0; j < p.getSize(); ++i)
+        if(this->getCoeff(i) == 0) continue;
+        for(int j = 0; j < p.getSize(); ++j)
         {
-            newPoly.setCoeff(this->getCoeff() * p.getCoeff(), i + j);
+            if(p.getCoeff(j) == 0) continue;
+            newPoly.setCoeff(newPoly.getCoeff(i+j) + (this->getCoeff(i) * p.getCoeff(j)), i+j);
         }
     }
-    return *this;
+    return newPoly;
 }
 
 Poly& Poly::operator=(const Poly& p) 
@@ -121,28 +170,67 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
     {
         if(p.m_terms[i] != 0) ++numTerms;
     }
+    // If the polynomial is equal to 0, print 0 and return.
+    if(numTerms == 0) 
+    {
+        std::cout << "0";
+        return os;
+    }
     // Iterate backwards through the polynomial
+    bool firstTerm = true;
     for(int degree = p.getSize()-1; degree >= 0; --degree) 
     {
+        int coeff;
+        if(firstTerm)
+        {
+            coeff = p.getCoeff(degree);
+        }
+        // If the term is not the first term, remove the sign for formatting.
+        else
+        {
+            coeff = std::abs(p.getCoeff(degree));
+        }
         // If coefficient is 0, skip to the next term
-        if(p.getCoeff(degree) == 0) continue;
+        if(coeff == 0) continue;
+        if(numTerms >= 1 && !firstTerm)
+        {
+            if(p.getCoeff(degree) >= 0) 
+            {
+                std::cout << " + ";  
+            }
+            else
+            {
+                std::cout << " - ";  
+            }
+            --numTerms;
+        }
         switch(degree)
         {
         case 0:
-            std::cout << p.getCoeff(degree);
+            std::cout << coeff;
             break;
         case 1:
-            std::cout << p.getCoeff(degree) << "x";
+            if(coeff == 1) 
+            {
+                std::cout << "x";
+            }
+            else 
+            {
+                std::cout << coeff << "x";
+            }
             break;
         default:
-            std::cout << p.getCoeff(degree) << "x^" << degree;
+            if(coeff == 1)
+            {
+                std::cout << "x^" << degree;
+            }
+            else 
+            {
+            std::cout << coeff << "x^" << degree;
+            }
             break;
         }
-        if(numTerms > 1)
-        {
-            std::cout << " + "; // TODO '-' 
-            --numTerms;
-        }
+        if(firstTerm) firstTerm = false;
     }
     return os;
 }
