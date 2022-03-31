@@ -1,3 +1,3 @@
-g++ poly.cpp test.cpp -g -o Test -Wall
-./Test
-# rm Test
+g++ poly.cpp test.cpp -g -o Test.out -Wall
+./Test.out
+# rm Test.out
