@@ -43,12 +43,13 @@ int main () {
     Poly i(0, 4);
     std::istringstream testArith("3 0 2 2 3 1 -1 -1 1 0 1 1 1 2 1 3 -1 -1");
     cin.rdbuf(testArith.rdbuf());
+    cin >> h;
+    cin >> i;
     std::cout << "Poly H: \nExpected: 2x^2 + 3x + 3\n";
     std::cout << "Result:   " << h << endl;
     std::cout << "Poly I: \nExpected: x^3 + x^2 + x + 1\n";
     std::cout << "Result:   " << i << endl;
-    cin >> h;
-    cin >> i;
+
 
     // Equivalence Tests
 
@@ -56,9 +57,9 @@ int main () {
     cout << "Result:   " << ((d == c) ? "true" : "false") << endl;
     cout << "a == c? \nExpected: false\n";
     cout << "Result:   " << ((a == c) ? "true" : "false") << endl;
-    cout << "d != c? \nExpected: true\n";
+    cout << "d != c? \nExpected: false\n";
     cout << "Result:   " << ((d != c) ? "true" : "false") << endl;
-    cout << "a != c? \nExpected: false\n";
+    cout << "a != c? \nExpected: true\n";
     cout << "Result:   " << ((a != c) ? "true" : "false") << endl; 
 
     // Arithmetic Tests

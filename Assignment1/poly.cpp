@@ -159,7 +159,7 @@ bool Poly::operator==(const Poly& p)
 bool Poly::operator!=(const Poly& p)
 {
     // Returns the negation of operator==()
-    return -(this->operator==(p));
+    return !(this->operator==(p));
 }
 
 std::ostream& operator<<(std::ostream& os, const Poly& p)
