@@ -1,4 +1,4 @@
-#ifndef NODEDATA_H
+	#ifndef NODEDATA_H
 #define NODEDATA_H
 #include <string>
 #include <iostream>
