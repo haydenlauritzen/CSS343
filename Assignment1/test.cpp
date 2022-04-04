@@ -1,3 +1,4 @@
+#if 0
 #include<iostream>
 #include<sstream>
 #include<string>
@@ -37,6 +38,7 @@ int main () {
     cin >> g;
     std::cout << "Poly F: \nExpected: 6x^7 + 4x^5 + x^2 - 8\n";
     std::cout << "Result:   " << f << endl;
+    std::cout << "Other Result:    "; f.print(); std::cout << endl; 
     std::cout << "Poly G: \nExpected: 5x^7 - 4x^3 + 10x - 2\n";
     std::cout << "Result:   " << g << endl;
     Poly h(0, 3);
@@ -79,7 +81,12 @@ int main () {
     std::cout << "G - 0: \nExpected: 5x^7 - 4x^3 + 10x - 2 \n";
     std::cout << "Result:   " << (g - j) << endl;   
     std::cout << "G * 0: \nExpected: 0\n";   
-    std::cout << "Result:   " << (g * j) << endl;           
+    std::cout << "Result:   " << (g * j) << endl;     
+
+    //Poly F 6x^7 + 4x^5 + x^2 - 8
+    // Out of size Test
+    std::cout << "I + F \nExpected: 5x^7 - + 3x^5 + x^3 + x^2  + 10x - 10\n";
+    std::cout << "Result:   " << (i + f) << endl;     
 
     // Assignment Tests
 
@@ -95,3 +102,4 @@ int main () {
     std::cout << "Result:   " << (a = f) << endl;  
 
 }
+#endif

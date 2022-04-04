@@ -122,6 +122,13 @@ class Poly {
      */
     friend std::ostream& operator<<(std::ostream&, const Poly&);
     /**
+     * @brief Prints the polynomial nicely.
+     * Ignores coefficients of 1
+     * Ignores positive signage.    
+     */
+    void print();
+
+    /**
      * @brief Get the coefficient of a term
      * Returns the coefficient of the term with the degree provided.
      * @param degree int - degree of term.

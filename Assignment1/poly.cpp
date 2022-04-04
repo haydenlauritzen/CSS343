@@ -170,31 +170,70 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
     {
         if(p.m_terms[i] != 0) ++numTerms;
     }
+    // Iterate backwards through the polynomial
+    for(int degree = p.getSize()-1; degree >= 0; --degree) 
+    {
+        int coeff = p.getCoeff(degree);
+        // If coefficient is 0, skip to next term.  
+        if(coeff == 0 && degree != 0) continue;
+        if(p.getCoeff(degree) > 0) 
+        {
+            std::cout << " +";  
+        }
+        switch(degree)
+        {
+        case 0:
+            std::cout << coeff;
+            break;
+        case 1:
+            std::cout << coeff << "x";
+            break;
+        default:
+            std::cout << coeff << "x^" << degree;
+            break;
+        }
+        if(numTerms > 0) 
+        {
+            std::cout << " ";
+            --numTerms;
+        }
+    }
+    return os;
+}
+
+void Poly::print() 
+{
+    {
+    // Counts number of terms in polynomial for delimiters.
+    int numTerms = 0;
+    for(int i = 0; i < this->getSize(); ++i)  
+    {
+        if(this->m_terms[i] != 0) ++numTerms;
+    }
     // If the polynomial is equal to 0, print 0 and return.
     if(numTerms == 0) 
     {
         std::cout << "0";
-        return os;
     }
     // Iterate backwards through the polynomial
     bool firstTerm = true;
-    for(int degree = p.getSize()-1; degree >= 0; --degree) 
+    for(int degree = this->getSize()-1; degree >= 0; --degree) 
     {
         int coeff;
         if(firstTerm)
         {
-            coeff = p.getCoeff(degree);
+            coeff = this->getCoeff(degree);
         }
         // If the term is not the first term, remove the sign for formatting.
         else
         {
-            coeff = std::abs(p.getCoeff(degree));
+            coeff = std::abs(this->getCoeff(degree));
         }
         // If coefficient is 0, skip to the next term
         if(coeff == 0) continue;
         if(numTerms >= 1 && !firstTerm)
         {
-            if(p.getCoeff(degree) >= 0) 
+            if(this->getCoeff(degree) >= 0) 
             {
                 std::cout << " + ";  
             }
@@ -232,11 +271,11 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
         }
         if(firstTerm) firstTerm = false;
     }
-    return os;
+}
 }
 int Poly::getCoeff(int degree) const
 {
-    if(degree > m_size + 1) throw std::out_of_range("Degree out of Bounds.");
+    if(degree > m_size + 1 || degree < 0) return 0;
     return this->m_terms[degree];
 }
 int Poly::getCoeff() const
@@ -255,9 +294,11 @@ std::istream& operator>>(std::istream& is, Poly& p)
     {
         std::cin >> coeff >> degree;
         if(degree == -1 && coeff == -1) break;
+        // If term is outside range; increase size of polynomial.
         if(degree > p.getSize() + 1)
         {
-            //TODO increase
+            Poly newTerm(coeff, degree);
+            p.operator+=(newTerm);
         }
         p.setCoeff(coeff, degree);
 
@@ -268,7 +309,8 @@ void Poly::setCoeff(int coeff, int degree)
 {
     if(degree > this->getSize() + 1)
     {
-        // Will have to resize Poly
+        Poly newTerm(coeff, degree); 
+        this->operator+=(newTerm);  
     }
     else
     {
