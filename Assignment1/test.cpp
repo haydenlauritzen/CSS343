@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include<iostream>
 #include<sstream>
 #include<string>
@@ -95,11 +95,23 @@ int main () {
     std::cout << "H += F: \nExpected: 6x^7 + 4x^5 + 3x^2 + 3x - 5\n";
     std::cout << "Result:   " << (h += f) << endl;
     std::cout << "H -= F: \nExpected: 2x^2 + 3x + 3\n";
-    std::cout << "Result:   " <<     (h -= f) << endl;   
+    std::cout << "Result:   " << (h -= f) << endl;   
     std::cout << "H *= F: \nExpected: 12x^9 + 18x^8 + 26x^7 + 12x^6 + 12x^5 + 2x^4 + 3x^3 - 13x^2 - 24x - 24\n";   
     std::cout << "Result:   " << (h *= f) << endl;  
     std::cout << "A = F: \nExpected: 6x^7 + 4x^5 + x^2 - 8\n";   
     std::cout << "Result:   " << (a = f) << endl;  
+
+    // Accessor and Mutator Tests
+
+	int coeff = f.getCoeff(0);
+    std::cout << "A = F: \nExpected: -8\n";   
+	std::cout << "coeff of subscript 0 of F is: " << coeff << endl;
+	std::cout << "Doing getCoeff for term -20000" << std::endl;
+	coeff = f.getCoeff(-20000);              // handle value out of range; expected 0
+	f.setCoeff(50, 0);                        // set x^0 coeff to 50
+	f.setCoeff(50, 20000);                    // set x^20000 coeff to 50
+	std::cout << "F: \nExpected: 50x^20000 6x^7 + 4x^5 + x^2 - 50 \n";   
+    std::cout << "F =" << f << endl;
 
 }
 #endif

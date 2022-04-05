@@ -1,4 +1,17 @@
+/**
+ * @file poly.cpp
+ * @author Hayden Lauritzen haydenlauritzen@gmail.com
+ * @brief Implementation File for Polynomial
+ * @version 0.1
+ * @date 2022-04-04
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include "poly.h"
+
+/* Constructors */
 
 Poly::Poly() : m_size(1)
 {
@@ -15,7 +28,7 @@ Poly::Poly(int coeff) : m_size(1)
 {
     m_terms = new int[m_size]{coeff};
 }
-
+  
 Poly::Poly(const Poly& p) : m_size(p.getSize())
 {
     m_terms = new int[m_size]{Poly::EMPTY};
@@ -29,6 +42,8 @@ Poly::~Poly()
     delete[] m_terms;
     m_terms = nullptr;
 }
+
+/* Arithmetic Operators */
 
 Poly Poly::operator+(const Poly& p) const
 {
@@ -115,6 +130,8 @@ Poly Poly::operator-(const Poly& p) const
     return newPoly;
 }
 
+/* Assignment Operators */
+
 Poly& Poly::operator=(const Poly& p) 
 {
     // deallocate memory
@@ -143,6 +160,8 @@ Poly& Poly::operator*=(const Poly& p)
     return this->operator=(this->operator*(p));
 }
 
+/* Equivalence Operators */
+
 bool Poly::operator==(const Poly& p)
 {
     /* Iterates through every term of the polynomial and checks the
@@ -161,6 +180,8 @@ bool Poly::operator!=(const Poly& p)
     // Returns the negation of operator==()
     return !(this->operator==(p));
 }
+
+/* Stream Operators */
 
 std::ostream& operator<<(std::ostream& os, const Poly& p)
 {
@@ -190,7 +211,7 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
             break;
         default:
             std::cout << coeff << "x^" << degree;
-            break;
+            break;  
         }
         if(numTerms > 0) 
         {
@@ -201,7 +222,59 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
     return os;
 }
 
-void Poly::print() 
+std::istream& operator>>(std::istream& is, Poly& p)
+{
+    int coeff, degree;
+    while(!std::cin.eof())
+    {
+        std::cin >> coeff >> degree;
+        if(degree == -1 && coeff == -1) break;
+        // If term is outside range; increase size of polynomial.
+        if(degree > p.getSize() + 1)
+        {
+            Poly newTerm(coeff, degree);
+            p.operator+=(newTerm);
+        }
+        p.setCoeff(coeff, degree);
+
+    } 
+    return is;
+}
+
+/* Accessors */ 
+
+int Poly::getCoeff(int degree) const
+{
+    if(degree > m_size + 1 || degree < 0) return 0;
+    return this->m_terms[degree];
+}
+int Poly::getCoeff() const
+{
+    return this->m_terms[this->getSize()-1];
+}
+int Poly::getSize() const
+{
+    return this->m_size;
+}
+
+/* Mutators */
+
+void Poly::setCoeff(int coeff, int degree)
+{
+    if(degree > this->getSize() + 1)
+    {
+        Poly newTerm(coeff, degree); 
+        this->operator+=(newTerm);  
+    }
+    else
+    {
+        m_terms[degree] = coeff;    
+    }
+}
+
+/* Auxiliary Functions */
+
+void Poly::print() const
 {
     {
     // Counts number of terms in polynomial for delimiters.
@@ -270,53 +343,10 @@ void Poly::print()
             break;
         }
         if(firstTerm) firstTerm = false;
+       }
     }
-}
-}
-int Poly::getCoeff(int degree) const
-{
-    if(degree > m_size + 1 || degree < 0) return 0;
-    return this->m_terms[degree];
-}
-int Poly::getCoeff() const
-{
-    return this->m_terms[this->getSize()-1];
-}
-int Poly::getSize() const
-{
-    return this->m_size;
 }
 
-std::istream& operator>>(std::istream& is, Poly& p)
-{
-    int coeff, degree;
-    while(!std::cin.eof())
-    {
-        std::cin >> coeff >> degree;
-        if(degree == -1 && coeff == -1) break;
-        // If term is outside range; increase size of polynomial.
-        if(degree > p.getSize() + 1)
-        {
-            Poly newTerm(coeff, degree);
-            p.operator+=(newTerm);
-        }
-        p.setCoeff(coeff, degree);
-
-    } 
-    return is;
-}
-void Poly::setCoeff(int coeff, int degree)
-{
-    if(degree > this->getSize() + 1)
-    {
-        Poly newTerm(coeff, degree); 
-        this->operator+=(newTerm);  
-    }
-    else
-    {
-        m_terms[degree] = coeff;    
-    }
-}
 
 void Poly::clear() 
 {
