@@ -1,4 +1,3 @@
-
 // DO NOT change anything in this file. Your code must compile and give the
 // correct output with this main on the linux machines.
 
