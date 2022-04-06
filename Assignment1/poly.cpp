@@ -187,19 +187,29 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
 {
     // Counts number of terms in polynomial for delimiters.
     int numTerms = 0;
+    bool isZero = true;
     for(int i = 0; i < p.getSize(); ++i)  
     {
-        if(p.m_terms[i] != 0) ++numTerms;
+        if(p.m_terms[i] != 0)
+        {
+            ++numTerms;
+            if(isZero) isZero = false;
+        } 
+    }   
+    if(isZero) 
+    {
+        std::cout << "0";
+        return os;
     }
     // Iterate backwards through the polynomial
     for(int degree = p.getSize()-1; degree >= 0; --degree) 
     {
         int coeff = p.getCoeff(degree);
-        // If coefficient is 0, skip to next term.  
-        if(coeff == 0 && degree != 0) continue;
+        // If coefficient is 0, skip to next term
+        if(coeff == 0) continue;
         if(p.getCoeff(degree) > 0) 
         {
-            std::cout << " +";  
+            std::cout << "+";  
         }
         switch(degree)
         {

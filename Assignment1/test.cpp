@@ -1,4 +1,4 @@
-#if 0
+#if 1
 #include<iostream>
 #include<sstream>
 #include<string>
@@ -21,13 +21,13 @@ int main () {
 
     std::cout << "Poly A: \nExpected: 0\n";
     std::cout << "Result:   " << a << endl;
-    std::cout << "Poly B: \nExpected: 3\n";
+    std::cout << "Poly B: \nExpected: +3\n";
     std::cout << "Result:   " << b << endl;
-    std::cout << "Poly C: \nExpected: 5x^7\n";
+    std::cout << "Poly C: \nExpected: +5x^7\n";
     std::cout << "Result:   " << c << endl;
-    std::cout << "Poly D: \nExpected: 5x^7\n";
+    std::cout << "Poly D: \nExpected: +5x^7\n";
     std::cout << "Result:   " << d << endl;
-    std::cout << "Poly E: \nExpected: 5x^7\n";
+    std::cout << "Poly E: \nExpected: +5x^7\n";
     std::cout << "Result:   " << e << endl;
 
     // Stream Tests
@@ -36,10 +36,9 @@ int main () {
     cin.rdbuf(testStream.rdbuf());
     cin >> f;
     cin >> g;
-    std::cout << "Poly F: \nExpected: 6x^7 + 4x^5 + x^2 - 8\n";
+    std::cout << "Poly F: \nExpected: +6x^7 +4x^5 +1x^2 -8\n";
     std::cout << "Result:   " << f << endl;
-    std::cout << "Other Result:    "; f.print(); std::cout << endl; 
-    std::cout << "Poly G: \nExpected: 5x^7 - 4x^3 + 10x - 2\n";
+    std::cout << "Poly G: \nExpected: +5x^7 -4x^3 +10x -2\n";
     std::cout << "Result:   " << g << endl;
     Poly h(0, 3);
     Poly i(0, 4);
@@ -47,9 +46,9 @@ int main () {
     cin.rdbuf(testArith.rdbuf());
     cin >> h;
     cin >> i;
-    std::cout << "Poly H: \nExpected: 2x^2 + 3x + 3\n";
+    std::cout << "Poly H: \nExpected: +2x^2 +3x +3\n";
     std::cout << "Result:   " << h << endl;
-    std::cout << "Poly I: \nExpected: x^3 + x^2 + x + 1\n";
+    std::cout << "Poly I: \nExpected: +1x^3 +1x^2 +1x +1\n";
     std::cout << "Result:   " << i << endl;
 
 
@@ -68,37 +67,37 @@ int main () {
 
     // Poly G 5x^7 - 4x^3 + 10x - 2
     // Poly I x^3 + x^2 + x + 1 
-    std::cout << "G + I: \nExpected: 5x^7 - 3x^3 + x^2 + 11x - 1\n";
+    std::cout << "G + I: \nExpected: +5x^7 -3x^3 +1x^2 +11x -1\n";
     std::cout << "Result:   " << (g + i) << endl;
-    std::cout << "G - I: \nExpected: 5x^7 - 5x^3 - x^2 - 9x - 3\n";
+    std::cout << "G - I: \nExpected: +5x^7 -5x^3 -1x^2 -9x -3\n";
     std::cout << "Result:   " << (g - i) << endl;   
-    std::cout << "G * I: \nExpected: 5x^10 + 5x^9 + 5x^8 + 5x^7 - 4x^6 - 4x^5 + 6x^4 + 4x^3 + 8x^2 + 8x - 2\n";   
+    std::cout << "G * I: \nExpected: +5x^10 +5x^9 +5x^8 +5x^7 -4x^6 -4x^5 +6x^4 +4x^3 +8x^2 +8x -2\n";   
     std::cout << "Result:   " << (g * i) << endl;   
 
     Poly j; // 0
-    std::cout << "G + 0: \nExpected: 5x^7 - 4x^3 + 10x - 2 \n";
+    std::cout << "G + 0: \nExpected: +5x^7 -4x^3 +10x -2 \n";
     std::cout << "Result:   " << (g + j) << endl;
-    std::cout << "G - 0: \nExpected: 5x^7 - 4x^3 + 10x - 2 \n";
+    std::cout << "G - 0: \nExpected: +5x^7 -4x^3 +10x -2 \n";
     std::cout << "Result:   " << (g - j) << endl;   
     std::cout << "G * 0: \nExpected: 0\n";   
     std::cout << "Result:   " << (g * j) << endl;     
 
     //Poly F 6x^7 + 4x^5 + x^2 - 8
     // Out of size Test
-    std::cout << "I + F \nExpected: 5x^7 - + 3x^5 + x^3 + x^2  + 10x - 10\n";
+    std::cout << "I + F \nExpected: +6x^7 +4x^5 +1x^3 +2x^2 +1x -7\n";
     std::cout << "Result:   " << (i + f) << endl;     
 
     // Assignment Tests
 
     // Poly H 2x^2 + 3x + 3
     // Poly F 6x^7 + 4x^5 + x^2 - 8
-    std::cout << "H += F: \nExpected: 6x^7 + 4x^5 + 3x^2 + 3x - 5\n";
+    std::cout << "H += F: \nExpected: +6x^7 +4x^5 +3x^2 +3x -5\n";
     std::cout << "Result:   " << (h += f) << endl;
-    std::cout << "H -= F: \nExpected: 2x^2 + 3x + 3\n";
+    std::cout << "H -= F: \nExpected: +2x^2 +3x +3\n";
     std::cout << "Result:   " << (h -= f) << endl;   
-    std::cout << "H *= F: \nExpected: 12x^9 + 18x^8 + 26x^7 + 12x^6 + 12x^5 + 2x^4 + 3x^3 - 13x^2 - 24x - 24\n";   
+    std::cout << "H *= F: \nExpected: +12x^9 +18x^8 +26x^7 +12x^6 +12x^5 +2x^4 +3x^3 -13x^2 -24x -24\n";   
     std::cout << "Result:   " << (h *= f) << endl;  
-    std::cout << "A = F: \nExpected: 6x^7 + 4x^5 + x^2 - 8\n";   
+    std::cout << "A = F: \nExpected: +6x^7 +4x^5 +x^2 -8\n";   
     std::cout << "Result:   " << (a = f) << endl;  
 
     // Accessor and Mutator Tests
@@ -110,8 +109,8 @@ int main () {
 	coeff = f.getCoeff(-20000);              // handle value out of range; expected 0
 	f.setCoeff(50, 0);                        // set x^0 coeff to 50
 	f.setCoeff(50, 20000);                    // set x^20000 coeff to 50
-	std::cout << "F: \nExpected: 50x^20000 6x^7 + 4x^5 + x^2 - 50 \n";   
-    std::cout << "F =" << f << endl;
+	std::cout << "F: \nExpected: +50x^20000 +6x^7 +4x^5 +1x^2 +50 \n";   
+    std::cout << "F =       " << f << endl;
 
 }
 #endif
