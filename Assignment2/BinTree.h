@@ -1,3 +1,11 @@
+/**
+ * @file BinTree.h
+ * @author haydenlauritzen@gmail.com
+ * @brief Header file for BinTree
+ * @date 2022-04-04
+ * @copyright Copyright (c) 2022
+ */
+
 #pragma once
 
 #include<iostream>
@@ -5,21 +13,31 @@
 
 class BinTree {
 
+    /**
+     * @brief Prints the BST.
+     * @return ostream& 
+     */
+    friend ostream& operator<<(ostream&, const BinTree&);
+
 private:
 
-    NodeData *left, *right; // Pointers to NodeData
+    struct BinNode
+    {
+        BinNode *left, *right;
+        NodeData *data;
+    };
+
+    BinNode* root;
 
 public:
 
     /* Constructors */
     /**
      * @brief Creates an empty binary tree.
-     * 
      */
     BinTree();
     /**
-     * @brief Copy Constructor
-     * Creates a Deep Copy
+     * @brief Creates a Deep Copy
      */
     BinTree(const BinTree&);
 
@@ -28,36 +46,30 @@ public:
     // Assignment
     /**
      * @brief Assigns the BST.
-     * @param bst
-     * @return BinTree* 
+     * @param bst BST to assign.
+     * @return A reference to this BST. 
      */
-    BinTree* operator=(const BinTree&);
+    BinTree& operator=(const BinTree&);
 
     // Equivalence 
     /**
-     * @brief Checks for BST Equivelance.
-     * @param bst
+     * @brief Checks for BST Equivalence.
+     * @param bst BST to assign.
      * @return true If 'bst' is equivalent to this tree.
      * @return false If 'bst' is not equivalent to this tree.
      */
     bool operator==(const BinTree&) const;
     /**
      * @brief Checks for BST Inequivelance
-     * Returns the negation of operator==()
-     * @param bst 
+     * @details Returns the negation of operator==()
+     * @param bst BST to assign.
      * @return true If 'bst' is not equivalent to this tree.
-     * @return false If 'bst' is equivalent to this tree.0
+     * @return false If 'bst' is equivalent to this tree.
      */
     bool operator!=(const BinTree&) const;
     
     /* Accessors */
 
-    /**
-     * @brief Prints the BST.
-     * 
-     * @return ostream& 
-     */
-    friend ostream& operator<<(ostream&, const BinTree&);
     /**
      * @brief Returns a pointer by reference of a specific value in the tree.
      * Searchs the BST for a specific value and returns a pointer by reference to that value.
