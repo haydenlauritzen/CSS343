@@ -29,6 +29,12 @@ private:
 
     BinNode* root;
 
+    // void inorderHelper const;
+    // Helper function for displaySideways()
+    void sideways(BinNode*, int) const;
+    // Helper function for operator=()
+    void assignment(const BinTree&);
+
 public:
 
     /* Constructors */
@@ -40,6 +46,10 @@ public:
      * @brief Creates a Deep Copy
      */
     BinTree(const BinTree&);
+    /**
+     * @brief Destroys the BST.
+     */
+    ~BinTree();
 
     /* Overloaded Operators */
 
@@ -90,6 +100,8 @@ public:
 
     /* Mutators */
 
+    // OPTIONAL
+    bool insert(NodeData*);
     /**
      * @brief Fills an array with BST data and empties the tree.
      * @param data - Array of Data values from tree.
@@ -101,6 +113,24 @@ public:
      * @pre 'data' is not empty.
      */
     void arrayToBSTree(NodeData*[]);
+
+    /* Auxilary Functions */
+
+    /**
+     * @brief Determines if the BST is empty.
+     * @return true If root == nullptr
+     * @return false If root != nullptr
+     */
+    bool isEmpty() const;
+    /**
+     * @brief Empties the BST.
+     * @post isEmpty() == true
+     */
+    void makeEmpty();
+    /**
+     * @brief Displays a sideways diagram of the tree to the console.
+     */
+    void displaySideways() const;
 
 };
 
