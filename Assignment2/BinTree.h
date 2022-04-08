@@ -82,8 +82,11 @@ public:
 
     /**
      * @brief Returns a pointer by reference of a specific value in the tree.
+     * 
+     * @details 
      * Searchs the BST for a specific value and returns a pointer by reference to that value.
      * If the value is not found, false is returned.
+     * 
      * @param value - Value to search for in tree.
      * @param ptr - Pointer to 'value'.
      * @post If false is returned 'ptr' is a nullptr.
