@@ -21,19 +21,18 @@ class BinTree {
 
 private:
 
-    struct BinNode
-    {
+    struct BinNode {
         BinNode *left, *right;
         NodeData *data;
     };
 
     BinNode* root;
 
-    // void inorderHelper const;
+    // void inorder const;
     // Helper function for displaySideways()
     void sideways(BinNode*, int) const;
     // Helper function for operator=()
-    void assignment(const BinTree&);
+    void assignment(const BinNode&);
 
 public:
 
