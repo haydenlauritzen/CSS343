@@ -28,11 +28,25 @@ private:
 
     BinNode* root;
 
-    // void inorder const;
     // Helper function for displaySideways()
-    void sideways(BinNode*, int) const;
+    void h_sideways(BinNode*, int) const;
     // Helper function for operator=()
-    void assignment(const BinNode&);
+    void h_assignment(BinNode*, const BinNode*);
+    // Helper function for operator==()
+    bool h_equivalence(const BinNode*, const BinNode*) const;
+    // Helper function for getHeight()
+    void h_height(BinNode*, int, int&) const;
+    // Helper function for makeEmpty()
+    void h_makeEmpty(BinNode*);
+
+    /**
+     * @brief Gets the BinNode that contains a specific NodeData
+     * 
+     * @param cur BinNode* to begin the search on. 
+     * @param nd NodeData to search for.
+     * @param out Return variable 
+     */
+    void getBinNode(BinNode*, const NodeData&, BinNode*) const;
 
 public:
 
@@ -99,6 +113,7 @@ public:
      * @return int 
      */
     int getHeight(const NodeData&) const;
+    int getDepth(const NodeData&);
 
     /* Mutators */
 
