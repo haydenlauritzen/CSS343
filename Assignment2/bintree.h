@@ -17,7 +17,7 @@ class BinTree {
      * @brief Prints the BST.
      * @return ostream& 
      */
-    friend ostream& operator<<(ostream&, const BinTree&);
+    friend std::ostream& operator<<(std::ostream&, const BinTree&);
 
 private:
 
@@ -28,25 +28,13 @@ private:
 
     BinNode* root;
 
-    // Helper function for displaySideways()
-    void h_sideways(BinNode*, int) const;
-    // Helper function for operator=()
-    void h_assignment(BinNode*, const BinNode*);
-    // Helper function for operator==()
-    bool h_equivalence(const BinNode*, const BinNode*) const;
-    // Helper function for getHeight()
-    void h_height(BinNode*, int, int&) const;
-    // Helper function for makeEmpty()
-    void h_makeEmpty(BinNode*);
-
     /**
      * @brief Gets the BinNode that contains a specific NodeData
-     * 
-     * @param cur BinNode* to begin the search on. 
      * @param nd NodeData to search for.
-     * @param out Return variable 
+     * @return nullptr if value not found
+     * @return BinNode* Pointer to BinNode containing NodeData
      */
-    void getBinNode(BinNode*, const NodeData&, BinNode*) const;
+    BinNode* findNode(const NodeData&) const;
 
 public:
 
@@ -107,43 +95,43 @@ public:
      * @return false If the value is not in the tree.
      */
     bool retrieve(const NodeData&, NodeData*&);
+
+    /* Mutators */
+
+    bool insert(NodeData*);
     /**
+     * @brief Fills an array with BST data and empties the tree.
+     * @param data Array of Data values from tree.
+     * @post BST is empty. 
+     */
+    void bstreeToArray(NodeData*[]);
+    /**
+     * @brief Fills a BST with array data and empties the array.
+     * @param data Array of Data values to insert.
+     * @pre 'data' is not empty.
+     */
+    void arrayToBSTree(NodeData*[]);
+    /**
+     * @brief Empties the BST.
+     * @post isEmpty() == true
+     */
+    void makeEmpty();
+
+    /* Auxilary Functions */
+
+   /**
      * @brief Returns the height of a specific value in the tree.
      * 
      * @return int 
      */
     int getHeight(const NodeData&) const;
-    int getDepth(const NodeData&);
-
-    /* Mutators */
-
-    // OPTIONAL
-    bool insert(NodeData*);
-    /**
-     * @brief Fills an array with BST data and empties the tree.
-     * @param data - Array of Data values from tree.
-     */
-    void bstreeToArray(NodeData*[]);
-    /**
-     * @brief Fills a BST with array data and empties the array.
-     * @param data - Array of Data values to insert.
-     * @pre 'data' is not empty.
-     */
-    void arrayToBSTree(NodeData*[]);
-
-    /* Auxilary Functions */
-
+    int getDepth(const NodeData&) const;
     /**
      * @brief Determines if the BST is empty.
      * @return true If root == nullptr
      * @return false If root != nullptr
      */
     bool isEmpty() const;
-    /**
-     * @brief Empties the BST.
-     * @post isEmpty() == true
-     */
-    void makeEmpty();
     /**
      * @brief Displays a sideways diagram of the tree to the console.
      */
