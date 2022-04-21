@@ -154,21 +154,6 @@ BinTree::BinNode* BinTree::findNode(const NodeData& nd) const {
     return result;
 }
 
-// int BinTree::getDepth(const NodeData& nd) {
-//     int depth = 0;
-//     NodeData* cur;
-//     retrieve(nd, cur);
-//     findDepth(cur, 0, depth);
-//     return depth;
-// }
-
-// void BinTree::findDepth(const BinNode* cur, int depth, int& nodeDepth) {
-//     ++depth;
-//    if((*(cur->data) != nullptr) && depth > nodeDepth) {
-//        nodeDepth = depth;
-//    } 
-// } 
-
 int BinTree::getHeight(const NodeData& nd) const {
     BinNode* node = findNode(nd); // Finds the node with 'nd'
     if(node == nullptr) return 0;  
@@ -184,19 +169,7 @@ int BinTree::getHeight(const NodeData& nd) const {
     };
     h_getHeight(node, depth, h_getHeight);
     return height;
-    // BinNode* cur = findNode(nd);
-    // h_height(out, 0, height);
-    // return height;
 }
-
-// void BinTree::h_height(BinNode* cur, int depth, int& height) const {
-//     if(cur == nullptr) return;
-//     if(depth > height) {
-//         height = depth;
-//         h_height(cur->left, depth+1, height);
-//         h_height(cur->right, depth+1, height);
-//     }
-// }
 
 void BinTree::bstreeToArray(NodeData* nd[]) {
     int index = 0;
@@ -244,7 +217,7 @@ void BinTree::arrayToBSTree(NodeData* nd[]) {
                 int rightSize = size - (size/2) - 1;
                 NodeData* rightArray[rightSize];
                 for(int i = 0; i < size-(rightSize); i++) {
-                    rightArray[i] = subArray[leftSize+i];
+                    rightArray[i] = subArray[(size/2)+1+i];
                 }
                 cur->right = new BinNode();
                 h_arrayToBSTree(cur->right, rightArray, rightSize, h_arrayToBSTree);
@@ -266,30 +239,6 @@ void BinTree::arrayToBSTree(NodeData* nd[]) {
         nd[i] = nullptr;
     }
 }
-
-#if 0
-
-void BinTree::arrayToBSTree(NodeData* nd[]) {
-    int index = 0;  
-    auto h_arrayToBSTree = [&](BinNode* cur, auto&& h_arrayToBSTree) mutable {
-        if(cur == nullptr) return;
-        // In-Order Traversal
-        h_arrayToBSTree(cur->left, h_arrayToBSTree);
-        cur->data = nd[++index];
-        h_arrayToBSTree(cur->right, h_arrayToBSTree);
-    };
-    h_arrayToBSTree(this->root, h_arrayToBSTree);
-}
-
-#endif
-
-// void BinTree::h_arrayToBSTree(NodeData* nd[], BinNode* cur, int& index) {
-//     if(cur == nullptr) return;
-//     h_arrayToBSTree(nd, cur->left, index);
-//     cur->data = nd[index];
-//     ++index;
-//     h_arrayToBSTree(nd, cur->right, index);
-// }
 
 bool BinTree::isEmpty() const {
     return this->root == nullptr || this->root->data == nullptr;
