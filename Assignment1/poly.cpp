@@ -198,7 +198,7 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
     }   
     if(isZero) 
     {
-        std::cout << "0";
+        os << "0";
         return os;
     }
     // Iterate backwards through the polynomial
@@ -209,23 +209,23 @@ std::ostream& operator<<(std::ostream& os, const Poly& p)
         if(coeff == 0) continue;
         if(p.getCoeff(degree) > 0) 
         {
-            std::cout << "+";  
+            os << "+";  
         }
         switch(degree)
         {
         case 0:
-            std::cout << coeff;
+            os << coeff;
             break;
         case 1:
-            std::cout << coeff << "x";
+            os << coeff << "x";
             break;
         default:
-            std::cout << coeff << "x^" << degree;
+            os << coeff << "x^" << degree;
             break;  
         }
         if(numTerms > 0) 
         {
-            std::cout << " ";
+            os << " ";
             --numTerms;
         }
     }
@@ -237,7 +237,7 @@ std::istream& operator>>(std::istream& is, Poly& p)
     int coeff, degree;
     while(!std::cin.eof())
     {
-        std::cin >> coeff >> degree;
+        is >> coeff >> degree;
         if(degree == -1 && coeff == -1) break;
         // If term is outside range; increase size of polynomial.
         if(degree > p.getSize() + 1)
@@ -271,7 +271,7 @@ int Poly::getSize() const
 
 void Poly::setCoeff(int coeff, int degree)
 {
-    if(degree > this->getSize() + 1)
+    if(degree + 1 > this->getSize())
     {
         Poly newTerm(coeff, degree); 
         this->operator+=(newTerm);  
@@ -356,7 +356,6 @@ void Poly::print() const
        }
     }
 }
-
 
 void Poly::clear() 
 {
