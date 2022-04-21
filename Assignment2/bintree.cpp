@@ -26,35 +26,39 @@ BinTree::~BinTree() {
 /* Overloaded Operators */
 
 BinTree& BinTree::operator=(const BinTree& bst) {
+    if(*this == bst) return *this;
     // If tree is empty, makeEmpty() will immediately return.
     this->makeEmpty();
-    auto h_assign = [](BinNode* lhs, const BinNode* rhs, auto&& h_assign) {
+    auto h_assign = [this](const BinNode* rhs, auto&& h_assign) {
         if(rhs == nullptr) return; // Base Case
-        // Traverse in Pre-Order and assign. 
-        BinNode* newNode = new BinNode();
-        newNode->data = rhs->data;
-        lhs = newNode;
-        h_assign(lhs->left, rhs->left, h_assign);
-        h_assign(lhs->right, rhs->right, h_assign);
+        NodeData* newData = new NodeData(*(rhs->data));
+        this->insert(newData);
+        h_assign(rhs->left, h_assign);
+        h_assign(rhs->right, h_assign);
     };
     // Begin recursion.
-    h_assign(this->root, bst.root, h_assign);
+    h_assign(bst.root, h_assign);
     return *this;
 }
 
 bool BinTree::operator==(const BinTree& bst) const {
-    auto h_equivalence = [](const BinNode* lhs, const BinNode* rhs, auto&& h_equivalence) -> bool {
+    bool equal = true;
+    auto h_equivalence = [&](const BinNode* lhs, const BinNode* rhs, auto&& h_equivalence) -> void {
         if(lhs == nullptr || rhs == nullptr) { // Base Case
             // If only one Node is a nullptr, the BSTs are not equivalent
             // If both nodes are nullptr, we have reached a leaf node's branches.
-            if(lhs == rhs) return true;
-            else return false;
+            if(lhs != rhs) equal = false;
         }
-        return (lhs->data == rhs->data // If all nodes are equivalant, will return true.
-        && h_equivalence(lhs->left, rhs->left, h_equivalence))
-        && h_equivalence(lhs->right, rhs->right, h_equivalence);
+        else if(*(lhs->data) != *(rhs->data)) { 
+            equal = false;
+        }
+        else {
+            h_equivalence(lhs->left, rhs->left, h_equivalence);
+            h_equivalence(lhs->right, rhs->right, h_equivalence);
+        }
     };
-    return h_equivalence(this->root, bst.root, h_equivalence);
+    h_equivalence(this->root, bst.root, h_equivalence);
+    return equal;
 }
 
 // bool BinTree::h_equivalence(const BinNode* lhs, const BinNode* rhs) const {
