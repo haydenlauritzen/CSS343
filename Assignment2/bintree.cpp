@@ -203,19 +203,71 @@ void BinTree::bstreeToArray(NodeData* nd[]) {
     auto h_bstreeToArray = [&](BinNode* cur, auto&& h_bstreeToArray) mutable {
         if(cur == nullptr) return;
         h_bstreeToArray(cur->left, h_bstreeToArray);
-        nd[++index] = cur->data;
+        // Array is assumed to handle ownership of values
+        NodeData* newData = new NodeData(*(cur->data));
+        nd[index++] = newData;
         h_bstreeToArray(cur->right, h_bstreeToArray);
     };
     h_bstreeToArray(this->root, h_bstreeToArray);
+    this->makeEmpty(); // Tree should be empty; deallocates memory for tree
 }
 
-// void BinTree::h_bstreeToArray(NodeData* nd[], BinNode* cur, int& index) {
-//     if(cur == nullptr) return;
-//     h_bstreeToArray(nd, cur->left, index);
-//     nd[index] = cur->data;
-//     ++index;
-//     h_bstreeToArray(nd, cur->right, index);
-// }
+void BinTree::arrayToBSTree(NodeData* nd[]) {
+    int numElements = 0;
+    for(int i = 0; i < 100; i++) { //Array is fixed to 100 elements
+        if(nd[i] == nullptr) break; // Rest of Array is nullptr 
+        ++numElements;
+    }
+    auto h_arrayToBSTree = [](BinNode* cur, NodeData* subArray[], int size, auto&& h_arrayToBSTree) mutable -> void {
+        /* 
+         * [(1)]   -> base case -> set value and return
+         * [1, (2)]          --> [1], [2], [nullptr] // [size/2](1)
+         * [1, 2, (3), 4]    --> [1, 2], [3], [4] // [size/2](2), [1], [size - (size/2) - 1](1)
+         * [1, 2, (3), 4, 5] --> [1, 2], [3], [4, 5] // [size/2](2), [1], [size - (size/2) - 1](2)
+         */
+        if(size > 1) {
+            // Left Branch
+            int leftSize = size/2;
+            NodeData* leftArray[leftSize];
+            for(int i = 0; i < leftSize; i++) {
+                leftArray[i] = subArray[i];
+            }
+            cur->left = new BinNode();
+            h_arrayToBSTree(cur->left, leftArray, leftSize, h_arrayToBSTree);
+            // Root
+            // BST is assumed to handle ownership of values
+            // Root value will be midpoint
+            NodeData* newData = new NodeData(*(subArray[size/2]));
+            cur->data = newData; 
+            // Right Branch
+            if(size > 2) { 
+                int rightSize = size - (size/2) - 1;
+                NodeData* rightArray[rightSize];
+                for(int i = 0; i < size-(rightSize); i++) {
+                    rightArray[i] = subArray[leftSize+i];
+                }
+                cur->right = new BinNode();
+                h_arrayToBSTree(cur->right, rightArray, rightSize, h_arrayToBSTree);
+            }
+        }
+        else if(size == 1) {
+            NodeData* newData = new NodeData(*(subArray[0]));
+            cur->data = newData; // Root value will be midpoint
+        }
+        else {
+            throw new std::logic_error("Recursion Out of Bounds");
+        }
+    };
+    h_arrayToBSTree(this->root, nd, numElements, h_arrayToBSTree);
+    // Delete values in array.
+    for(int i = 0; i < 100; i++) { 
+        if(nd[i] == nullptr) break; // Rest of array is nullptr
+        delete nd[i];   
+        nd[i] = nullptr;
+    }
+}
+
+#if 0
 
 void BinTree::arrayToBSTree(NodeData* nd[]) {
     int index = 0;  
@@ -229,6 +281,8 @@ void BinTree::arrayToBSTree(NodeData* nd[]) {
     h_arrayToBSTree(this->root, h_arrayToBSTree);
 }
 
+#endif
+
 // void BinTree::h_arrayToBSTree(NodeData* nd[], BinNode* cur, int& index) {
 //     if(cur == nullptr) return;
 //     h_arrayToBSTree(nd, cur->left, index);
@@ -238,23 +292,27 @@ void BinTree::arrayToBSTree(NodeData* nd[]) {
 // }
 
 bool BinTree::isEmpty() const {
-    return this->root == nullptr;
+    return this->root == nullptr || this->root->data == nullptr;
 }
 
 void BinTree::makeEmpty() {
-    auto h_makeEmpty = [&](BinNode* cur, auto&& h_makeEmpty) mutable {
+    auto h_makeEmpty = [](BinNode* cur, auto&& h_makeEmpty) mutable {
         if(cur == nullptr) return;
-        h_makeEmpty(cur->right, h_makeEmpty);
         h_makeEmpty(cur->left, h_makeEmpty);
+        h_makeEmpty(cur->right, h_makeEmpty);
         delete cur->data;
         cur->data = nullptr;
-        delete cur;
-        cur = nullptr;
+        delete cur->left;
+        cur->left = nullptr;
+        delete cur->right;
+        cur->right = nullptr;
+
     };
     h_makeEmpty(this->root, h_makeEmpty);
 }
 
 void BinTree::displaySideways() const { 
+    if(this->root == nullptr) return;
     auto h_sideways = [](BinNode* cur, int level, auto&& h_sideways) -> void {
         if (cur != nullptr) {
             level++;
@@ -269,18 +327,3 @@ void BinTree::displaySideways() const {
     };
 	h_sideways(this->root, 0, h_sideways);
 }
-
-// void BinTree::h_sideways(BinNode* current, int level) const {
-// 	if (current != NULL) {
-// 		level++;
-// 		h_sideways(current->right, level);
-
-// 		// indent for readability, 4 spaces per depth level 
-// 		for (int i = level; i >= 0; i--) {
-// 			cout << "    ";
-// 		}
-
-// 		cout << *current->data << endl;        // display information of object
-// 		h_sideways(current->left, level);
-// 	}
-// }
