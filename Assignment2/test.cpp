@@ -1,8 +1,81 @@
+#if 1
+
 #include"bintree.h"
 
 using namespace std;
 
 const static int ARRAYSIZE = 100;
+
+void buildTree(BinTree&, ifstream&); 
+void initArray(NodeData*[]); 
+
+/* 
+ * $$ Empty Tree
+ * a $$ Tree Size 1
+ * b a c b a c $$ Tree Size > 1; Duplicate Values
+ * c b a $$ Tree Size > 1
+ * a a a b b b c c c $$ Tree Size > 1 Duplicate Values
+ */ 
+
+int main() {
+	string log;
+	BinTree tree, empty, root; // Test Default Constructor
+	tree.isEmpty() ? cerr << "Default Constructor Test Passed\n " : cerr << "Default Constructor Test Failed\n"; 
+	NodeData* rootVal = new NodeData("root");
+	root.insert(rootVal);
+	// Test Self Equivalence 
+	empty == empty ? cerr << "Empty Self Equivalence Test Passed\n " : cerr << "Empty Self Equivalence Test Failed\n"; 
+	root == root ? cerr << "Single Value Self Equivalence Test Passed\n " : cerr << "Single Value Self Equivalence Test Failed\n"; 
+	root == empty ? cerr << "Single Value = Empty Equivalence Test Passed\n " : cerr << "Single Value = Empty Self Equivalence Test Failed\n"; 
+	cout << endl;
+	// Test Self Inequivalence 
+	empty != empty ? cerr << "Empty Self Equivalence Test Passed\n " : cerr << "Empty Self Equivalence Test Failed\n"; 
+	root != root ? cerr << "Single Value Self Equivalence Test Passed\n " : cerr << "Single Value Self Equivalence Test Failed\n"; 
+	root != empty ? cerr << "Single Value != Empty Equivalence Test Passed\n " : cerr << "Single Value != Empty Self Equivalence Test Failed\n"; 
+	cout << endl;
+	// Test Assignemnt Bounds
+	BinTree copyAE = empty;
+	copyAE == empty ? cerr << "Assign to Empty Test Passed\n" : cerr << "Assign to Empty Test Failed\n"; 
+	BinTree copyAR = root;
+	copyAR == empty ? cerr << "Assign to Single Value Test Passed\n" : cerr << "Assign to Single Value Test Failed\n";
+	root = root;
+	root == root ? cerr << "Assign to Self Test Passed\n" : cerr << "Assign to Self Test Failed\n";  
+	// Test Copy Construction Bounds
+	BinTree copyCR(root);
+	copyCR == empty ? cerr << "Assign to Empty Test Passed\n" : cerr << "Assign to Empty Test Failed\n"; 
+	BinTree copyCE;
+	copyCE == empty ? cerr << "Assign to Single Value Test Passed\n" : cerr << "Assign to Single Value Test Failed\n";
+	//
+
+	
+	ifstream infile("testData.txt");
+	if (!infile) {
+		cout << "File could not be opened." << endl;
+		return 1;
+	}
+	NodeData* ndArray[ARRAYSIZE];
+	initArray(ndArray);
+	// Test all Tree Edge Cases (Size 0, Size 1, Size >1, Duplicate Values)
+	while(!infile.eof()) {
+		cout << "---------------------------------------------------------------\n"; 
+		cout << "Inital Tree Values: " << endl;
+		buildTree(tree, infile);
+		tree.displaySideways();
+		cout << endl;
+		// Test Copy and Assignment Construction 
+		tree.isEmpty() ? cerr << "Tree is Empty\n " : cerr << "Tree is not Empty\n"; 
+		BinTree copy(tree);
+		copy == tree ? cerr << "Copy Constructor Test Passed\n " : cerr << "Copy Constructor Test Failed\n";
+		BinTree copy2 = tree;
+		copy2 == tree ? cerr << "Assignment Test Passed\n " : cerr << "Assignment Test Failed\n";
+		cout << endl;
+	 	tree == tree ? cerr << "Multiple Value Self Equivalence Test Passed\n " : cerr << "Multiple Value Self Equivalence Test Failed\n"; 
+
+
+
+	}
+}
+
 
 void buildTree(BinTree& T, ifstream& infile) {
 	string s;
@@ -26,7 +99,4 @@ void initArray(NodeData* ndArray[]) {
 		ndArray[i] = NULL;
 }
 
-int main() {
-
-    BinTree bst;
-}
+#endif
