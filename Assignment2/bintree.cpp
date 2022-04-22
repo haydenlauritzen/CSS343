@@ -61,12 +61,6 @@ bool BinTree::operator==(const BinTree& bst) const {
     return equal;
 }
 
-// bool BinTree::h_equivalence(const BinNode* lhs, const BinNode* rhs) const {
-//     return (lhs->data == rhs->data) 
-//     && h_equivalence(lhs->left, rhs->left) 
-//     && h_equivalence(lhs->right, rhs->right);
-// } 
-
 bool BinTree::operator!=(const BinTree& bst) const {
     return !(this->operator==(bst));
 }
@@ -166,8 +160,8 @@ int BinTree::getHeight(const NodeData& nd) const {
         if(depth > height) {
             height = depth;
         }
-        h_getHeight(cur->left, depth++, h_getHeight);
-        h_getHeight(cur->right, depth++, h_getHeight);
+        h_getHeight(cur->left, depth+1, h_getHeight);
+        h_getHeight(cur->right, depth+1, h_getHeight);
     };
     h_getHeight(node, depth, h_getHeight);
     return height;
