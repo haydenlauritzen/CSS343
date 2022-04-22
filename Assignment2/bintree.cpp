@@ -87,6 +87,7 @@ bool BinTree::retrieve(const NodeData& nd, NodeData*& out) {
 bool BinTree::insert(NodeData* nd) {
     // If tree is empty
     if(this->isEmpty()) {
+        // BST will handle ownership of memory.
         BinNode* newNode = new BinNode();
         newNode->data = nd;
         this->root = newNode;
@@ -94,16 +95,16 @@ bool BinTree::insert(NodeData* nd) {
     }
     BinNode* cur = this->root;
     bool success = 0;
-    auto h_insert = [&](auto&& h_insert) mutable {
+    auto h_insert = [&](auto&& h_insert) mutable -> void {
         // Data to insert is larger -> go right
         if(*nd > *(cur->data)) {
             // If right is empty, insert node and end recursion
-            if(cur->right == nullptr) {
+            if(cur->right == nullptr) {   
+                // BST will handle ownership of memory. 
                 BinNode* newNode = new BinNode();
                 newNode->data = nd;
                 cur->right = newNode;
                 success = true;
-                return;
             }
             // Otherwise traverse to the right
             else {
@@ -115,22 +116,19 @@ bool BinTree::insert(NodeData* nd) {
         else if(*nd < *(cur->data)) {
             // If left is empty, insert node and end recursion
             if(cur->left == nullptr) {
+                // BST will handle ownership of memory. 
                 BinNode* newNode = new BinNode();
                 newNode->data = nd;
                 cur->left = newNode;
                 success = true;
-                return;
-            }
+            }    
             // Otherwise traverse to the left
             else { 
                 cur = cur->left;
                 h_insert(h_insert);
             }
         }
-        else {
-            // Duplicate value
-            return;             
-        }
+        // Otherwise node is a duplicate, function will return
     };
     h_insert(h_insert);
     return success;
@@ -190,6 +188,9 @@ void BinTree::bstreeToArray(NodeData* nd[]) {
 }
 
 void BinTree::arrayToBSTree(NodeData* nd[]) {
+    if(this->root == nullptr) {
+        this->root = new BinNode();
+    }
     int numElements = 0;
     for(int i = 0; i < 100; i++) { //Array is fixed to 100 elements
         if(nd[i] == nullptr) break; // Rest of Array is nullptr 
@@ -249,17 +250,15 @@ bool BinTree::isEmpty() const {
 }
 
 void BinTree::makeEmpty() {
-    auto h_makeEmpty = [](BinNode* cur, auto&& h_makeEmpty) mutable {
+    if(this->root == nullptr) return;
+    auto h_makeEmpty = [](BinNode*& cur, auto&& h_makeEmpty) mutable {
         if(cur == nullptr) return;
         h_makeEmpty(cur->left, h_makeEmpty);
         h_makeEmpty(cur->right, h_makeEmpty);
         delete cur->data;
         cur->data = nullptr;
-        delete cur->left;
-        cur->left = nullptr;
-        delete cur->right;
-        cur->right = nullptr;
-
+        delete cur;
+        cur = nullptr;
     };
     h_makeEmpty(this->root, h_makeEmpty);
 }

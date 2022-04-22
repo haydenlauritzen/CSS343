@@ -98,6 +98,12 @@ public:
 
     /* Mutators */
 
+    /**
+     * @brief Inserts a Node into the BST.
+     * @pre NodeData is dynamically allocated.
+     * @return true If node was successfully inserted into the Tree.
+     * @return false If the node was not successfully inserted into the tree (duplicate value)
+     */
     bool insert(NodeData*);
     /**
      * @brief Fills an array with BST data and empties the tree.
@@ -125,7 +131,7 @@ public:
      * @return int 
      */
     int getHeight(const NodeData&) const;
-    int getDepth(const NodeData&) const;
+    // int getDepth(const NodeData&) const; // OPTIONAL
     /**
      * @brief Determines if the BST is empty.
      * @return true If root == nullptr
