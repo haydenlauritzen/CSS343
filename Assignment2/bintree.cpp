@@ -79,53 +79,24 @@ bool BinTree::retrieve(const NodeData& nd, NodeData*& out) {
 /* Mutators */
 
 bool BinTree::insert(NodeData* nd) {
-    // If tree is empty
-    if(this->isEmpty()) {
-        // BST will handle ownership of memory.
-        BinNode* newNode = new BinNode();
-        newNode->data = nd;
-        this->root = newNode;
-        return true;
-    }
-    BinNode* cur = this->root;
-    bool success = 0;
-    auto h_insert = [&](auto&& h_insert) mutable -> void {
+    auto h_insert = [&](BinNode*& cur, auto&& h_insert) mutable {
+        if(cur == nullptr) {
+            cur = new BinNode();
+            cur->data = nd;
+            return true;
+        }
         // Data to insert is larger -> go right
-        if(*nd > *(cur->data)) {
-            // If right is empty, insert node and end recursion
-            if(cur->right == nullptr) {   
-                // BST will handle ownership of memory. 
-                BinNode* newNode = new BinNode();
-                newNode->data = nd;
-                cur->right = newNode;
-                success = true;
-            }
-            // Otherwise traverse to the right
-            else {
-                cur = cur->right;
-                h_insert(h_insert);
-            }
+        else if(*nd > *(cur->data)) {
+            return h_insert(cur->right, h_insert);
         }
         // Data to insert is smaller -> go left
         else if(*nd < *(cur->data)) {
-            // If left is empty, insert node and end recursion
-            if(cur->left == nullptr) {
-                // BST will handle ownership of memory. 
-                BinNode* newNode = new BinNode();
-                newNode->data = nd;
-                cur->left = newNode;
-                success = true;
-            }    
-            // Otherwise traverse to the left
-            else { 
-                cur = cur->left;
-                h_insert(h_insert);
-            }
+            return h_insert(cur->left, h_insert);
         }
         // Otherwise node is a duplicate, function will return
+        return false;
     };
-    h_insert(h_insert);
-    return success;
+    return h_insert(this->root, h_insert);
 }
 
 /* Auxilary Functions */
@@ -183,6 +154,7 @@ int BinTree::getHeight(const NodeData& nd) const {
 }
 
 void BinTree::bstreeToArray(NodeData* nd[]) {
+    if(this->isEmpty()) return;
     int index = 0;
     auto h_bstreeToArray = [&](BinNode* cur, auto&& h_bstreeToArray) mutable {
         if(cur == nullptr) return;
@@ -197,6 +169,7 @@ void BinTree::bstreeToArray(NodeData* nd[]) {
 }
 
 void BinTree::arrayToBSTree(NodeData* nd[]) {
+    if(nd[0] == nullptr) return;
     if(this->root == nullptr) {
         this->root = new BinNode();
     }
