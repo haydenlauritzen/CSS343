@@ -131,6 +131,21 @@ bool BinTree::insert(NodeData* nd) {
 /* Auxilary Functions */
 
 std::ostream& operator<<(ostream& os, const BinTree& bst) {
+    bool first = true;
+    auto h_operatoros = [&](BinTree::BinNode* cur, auto&& h_operatoros) {
+        if(cur == nullptr) return;
+        h_operatoros(cur->left, h_operatoros);
+        if(!first) {
+            os << " ";
+        }
+        else {
+            first = false;
+        }
+        os << *cur->data; 
+        h_operatoros(cur->right, h_operatoros);
+    };
+    h_operatoros(bst.root, h_operatoros);
+    os << std::endl;
     return os;
 }
 
