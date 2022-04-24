@@ -35,6 +35,12 @@ private:
      * @return BinNode* Pointer to BinNode containing NodeData
      */
     BinNode* findNode(const NodeData&) const;
+    /**
+     * @brief Sets the BinNode's and makes a copy of the NodeData
+     * @param node Node to set NodeData to
+     * @param nd NodeData to make a copy of.
+     */
+    void setNode(BinNode*&, const NodeData*);
 
 public:
 
