@@ -29,7 +29,7 @@ BinTree& BinTree::operator=(const BinTree& bst) {
     if(*this == bst) return *this;
     // If tree is empty, makeEmpty() will immediately return.
     this->makeEmpty();
-    auto h_assign = [this](BinNode*& lhs, const BinNode* rhs, auto&& h_assign) mutable {
+    auto h_assign = [this](const BinNode* rhs, auto&& h_assign) {
         if(rhs == nullptr) return; // Base Case
         NodeData* newData = new NodeData(*rhs->data);
         setNode(lhs, newData);
@@ -37,21 +37,28 @@ BinTree& BinTree::operator=(const BinTree& bst) {
         h_assign(lhs->right, rhs->right, h_assign);
     };
     // Begin recursion.
-    h_assign(this->root, bst.root, h_assign);
+    h_assign(bst.root, h_assign);
     return *this;
 }
 
 bool BinTree::operator==(const BinTree& bst) const {
-    auto h_equivalence = [&](const BinNode* lhs, const BinNode* rhs, auto&& h_equivalence) {
-        // If both nodes are nullptr, we have reached a leaf node's branches.
-        if(lhs == nullptr && rhs == nullptr) return true;
-        // If only one Node is a nullptr, the BSTs are not equivalent
-        else if(lhs == nullptr || rhs == nullptr) return false;
-        return (*(lhs->data) == *(rhs->data)) 
-            && h_equivalence(lhs->left, rhs->left, h_equivalence)
-            && h_equivalence(lhs->right, rhs->right, h_equivalence);
+    bool equal = true;
+    auto h_equivalence = [&](const BinNode* lhs, const BinNode* rhs, auto&& h_equivalence) -> void {
+        if(lhs == nullptr || rhs == nullptr) { // Base Case
+            // If only one Node is a nullptr, the BSTs are not equivalent
+            // If both nodes are nullptr, we have reached a leaf node's branches.
+            if(lhs != rhs) equal = false;
+        }
+        else if(*(lhs->data) != *(rhs->data)) { 
+            equal = false;
+        }
+        else {
+            h_equivalence(lhs->left, rhs->left, h_equivalence);
+            h_equivalence(lhs->right, rhs->right, h_equivalence);
+        }
     };
-    return h_equivalence(this->root, bst.root, h_equivalence);
+    h_equivalence(this->root, bst.root, h_equivalence);
+    return equal;
 }
 
 bool BinTree::operator!=(const BinTree& bst) const {
@@ -65,7 +72,7 @@ bool BinTree::retrieve(const NodeData& nd, NodeData*& out) {
     // If search fails, nullptr is returned
     if(temp == nullptr) return false;
     out = temp->data;
-    // Returns true if found node == nd
+    // Returns true if the found node == nd
     return (nd == *out); 
 }
 
@@ -74,7 +81,8 @@ bool BinTree::retrieve(const NodeData& nd, NodeData*& out) {
 bool BinTree::insert(NodeData* nd) {
     auto h_insert = [&](BinNode*& cur, auto&& h_insert) mutable {
         if(cur == nullptr) {
-            setNode(cur, nd);
+            cur = new BinNode();
+            cur->data = nd;
             return true;
         }
         // Data to insert is larger -> go right
@@ -113,19 +121,16 @@ std::ostream& operator<<(ostream& os, const BinTree& bst) {
 }
 
 BinTree::BinNode* BinTree::findNode(const NodeData& nd) const {
-    auto h_findNode = [&](BinNode* cur, auto&& h_findNode) -> BinNode* {
-        if(cur == nullptr) return cur; // Base Case
-        if(nd == *(cur->data)) { // Node matches NodeData, end recursion
-            return cur;
+    BinNode* result = nullptr;
+    auto h_findNode = [&](BinNode* cur, auto&& h_findNode) {
+        if(cur == nullptr) return; // Base Case
+        if(*(cur->data) == nd) { // Node matches NodeData, end recursion
+            result = cur;
+            return;
         }
-        else if(nd < *(cur->data)) {
-            return h_findNode(cur->left, h_findNode);
-        }
-        else if(nd > *(cur->data)) {
-            return h_findNode(cur->right, h_findNode);
-        }
-        // Otherwise Node was not found, return nullptr
-        else return nullptr;
+        // Otherwise, continue recursion.
+        h_findNode(cur->left, h_findNode);
+        h_findNode(cur->right, h_findNode);
     };
     return h_findNode(this->root, h_findNode);
 }
@@ -150,7 +155,7 @@ int BinTree::getHeight(const NodeData& nd) const {
         return left == nullptr ? right : left;
     };
     BinNode* node = h_findNode(this->root, h_findNode);
-    if(node == nullptr) return 0;  
+    if(node == nullptr) return 0;       
     int height = 1;
     int depth = 1;
     auto h_getHeight = [&](BinNode* cur, int depth, auto&& h_getHeight) mutable {
@@ -184,8 +189,8 @@ void BinTree::arrayToBSTree(NodeData* nd[]) {
     if(nd[0] == nullptr) return;
     const int ARRAYSIZE = 100; //Array is fixed to 100 elements
     int numElements = 0;
-    for(int i = 0; i < ARRAYSIZE; i++) { 
-        if(nd[i] == nullptr) break; // Rest of array is nullptr 
+    for(int i = 0; i < 100; i++) { //Array is fixed to 100 elements
+        if(nd[i] == nullptr) break; // Rest of Array is nullptr 
         ++numElements;
     }
     if(numElements == 0) return;
@@ -203,7 +208,7 @@ void BinTree::arrayToBSTree(NodeData* nd[]) {
     };
     h_arrayToBSTree(this->root, 0, numElements-1, h_arrayToBSTree);
     // Delete values in array.
-    for(int i = 0; i < ARRAYSIZE; i++) { 
+    for(int i = 0; i < 100; i++) { 
         if(nd[i] == nullptr) break; // Rest of array is nullptr
         delete nd[i];   
         nd[i] = nullptr;
@@ -231,15 +236,16 @@ void BinTree::makeEmpty() {
 void BinTree::displaySideways() const { 
     if(this->root == nullptr) return;
     auto h_sideways = [](BinNode* cur, int level, auto&& h_sideways) -> void {
-        if (cur == nullptr) return;
-        level++;
-        h_sideways(cur->right, level, h_sideways);
-        // indent for readability, 4 spaces per depth level 
-        for (int i = level; i >= 0; i--) {
-            cout << "    ";
-        }
-        cout << *cur->data << endl;        // display information of object
-        h_sideways(cur->left, level, h_sideways);
+        if (cur != nullptr) {
+            level++;
+            h_sideways(cur->right, level, h_sideways);
+            // indent for readability, 4 spaces per depth level 
+            for (int i = level; i >= 0; i--) {
+                cout << "    ";
+            }
+            cout << *cur->data << endl;        // display information of object
+            h_sideways(cur->left, level, h_sideways);
+	    }
     };
 	h_sideways(this->root, 0, h_sideways);
 }
