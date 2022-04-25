@@ -137,8 +137,20 @@ BinTree::BinNode* BinTree::findNode(const NodeData& nd) const {
 }
 
 int BinTree::getHeight(const NodeData& nd) const {
-    BinNode* node = findNode(nd); // Finds the node with 'nd'
-    if(node == nullptr) return 0;  
+    // Tree is not assumed to be a BST
+    // BinNode* node = findNode(nd); // Finds the node with 'nd'
+    // Therefore this function above is not used
+    auto h_findNode = [&](BinNode* cur, auto&& h_findNode) -> BinNode* {
+        if(cur == nullptr) return cur; // Base Case
+        if(nd == *(cur->data)) return cur;  // Node matches NodeData, end recursion
+        BinNode* left = h_findNode(cur->left, h_findNode);
+        BinNode* right = h_findNode(cur->right, h_findNode);
+        // Return the pointer that is not nullptr
+        // If both are nullptr, nullptr gets returned
+        return left == nullptr ? right : left;
+    };
+    BinNode* node = h_findNode(this->root, h_findNode);
+    if(node == nullptr) return 0;       
     int height = 1;
     int depth = 1;
     auto h_getHeight = [&](BinNode* cur, int depth, auto&& h_getHeight) mutable {
