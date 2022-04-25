@@ -36,11 +36,11 @@ private:
      */
     BinNode* findNode(const NodeData&) const;
     /**
-     * @brief Sets the BinNode's and makes a copy of the NodeData
+     * @brief Sets the BinNode's NodeData
      * @param node Node to set NodeData to
-     * @param nd NodeData to make a copy of.
+     * @param nd NodeData to insert into node.
      */
-    void setNode(BinNode*&, const NodeData*);
+    void setNode(BinNode*&, NodeData*);
 
 public:
 

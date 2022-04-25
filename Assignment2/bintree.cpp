@@ -31,7 +31,8 @@ BinTree& BinTree::operator=(const BinTree& bst) {
     this->makeEmpty();
     auto h_assign = [this](BinNode*& lhs, const BinNode* rhs, auto&& h_assign) mutable {
         if(rhs == nullptr) return; // Base Case
-        setNode(lhs, rhs->data);
+        NodeData* newData = new NodeData(*rhs->data);
+        setNode(lhs, newData);
         h_assign(lhs->left, rhs->left, h_assign);
         h_assign(lhs->right, rhs->right, h_assign);
     };
@@ -129,11 +130,10 @@ BinTree::BinNode* BinTree::findNode(const NodeData& nd) const {
     return h_findNode(this->root, h_findNode);
 }
 
-void BinTree::setNode(BinNode*& node, const NodeData* nd) {
+void BinTree::setNode(BinNode*& node, NodeData* nd) {
     if(nd == nullptr) return;
     node = new BinNode();
-    NodeData* newData = new NodeData(*nd);
-    node->data = newData;
+    node->data = nd;
 }
 
 int BinTree::getHeight(const NodeData& nd) const {
@@ -181,6 +181,7 @@ void BinTree::bstreeToArray(NodeData* nd[]) {
 }
 
 void BinTree::arrayToBSTree(NodeData* nd[]) {
+    if(nd[0] == nullptr) return;
     const int ARRAYSIZE = 100; //Array is fixed to 100 elements
     int numElements = 0;
     for(int i = 0; i < ARRAYSIZE; i++) { 
@@ -192,13 +193,15 @@ void BinTree::arrayToBSTree(NodeData* nd[]) {
         if(left > right) return;
         int median = (left+right)/2;
         // Set median to current root node
-        setNode(cur, nd[median]);
+        // BST will handle deallocation.
+        NodeData* newData = new NodeData(*nd[median]);
+        setNode(cur, newData);
         // Values left of root get inserted left of the root
         h_arrayToBSTree(cur->left, left, median - 1, h_arrayToBSTree);
         // Values left of root get inserted right of the root
         h_arrayToBSTree(cur->right, median + 1, right, h_arrayToBSTree);
     };
-    h_arrayToBSTree(this->root, 0, numElements, h_arrayToBSTree);
+    h_arrayToBSTree(this->root, 0, numElements-1, h_arrayToBSTree);
     // Delete values in array.
     for(int i = 0; i < ARRAYSIZE; i++) { 
         if(nd[i] == nullptr) break; // Rest of array is nullptr
