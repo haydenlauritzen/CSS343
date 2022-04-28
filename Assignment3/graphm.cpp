@@ -103,16 +103,23 @@ void GraphM::displayAll() const {
         std::cout << *this->data[i] << std::endl;
         for(int j = 0; j < this->size; ++j) {
             if(i == j) continue;
-            std::cout << "                               " << i << "       " << j; 
+            std::cout << "                               " << i+1 << "       " << j+1; 
+            if(this->travel[i][j].dist == GraphM::NOPATH) {
+                std::cout << "      " << "---" << "         ";
+                std::cout << i << std::endl;
+                continue;
+            }
             std::cout << "      " << this->travel[i][j].dist << "          ";
-            std::cout.flush();
             int prev = this->travel[i][j].path;
             // TODO REVERSE THIS
             bool first = true;
+            std::cout << j+1 << ' ';
             while(prev != i) {
-                std::cout << prev << ' ';
+                std::cout << prev+1 << ' ';
                 prev = this->travel[i][prev].path;
             }
+            std::cout << i+1;
+            std::cout << std::endl;
         }
     }
 }
