@@ -31,6 +31,7 @@ void GraphM::buildGraph(std::ifstream& file) {
     do {
         std::getline(file, line);
         line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
+        if(file.eof()) return;
     } while(line == "");
     // First line will be number of number of nodes
     this->size = std::stoi(line);
@@ -109,7 +110,7 @@ void GraphM::displayAll() const {
             if(i == j) continue;
             std::cout << "                               " << i+1 << "       " << j+1; 
             if(this->travel[i][j].dist == GraphM::NOPATH) {
-                std::cout << "      " << "---" << "         ";
+                std::cout << "      " << "0" << "         ";
                 std::cout << i << std::endl;
                 continue;
             }
@@ -134,14 +135,16 @@ void GraphM::displayAll() const {
 void GraphM::display(int from, int to) const {
     if(from > this->size || to > this->size) { 
         std::cout << "Node is not in Graph.\n";
+        std::cout << std::endl;
         return;
     }
     // If no path was present
-    std::stack<int> data;
+    std::stack<int> name;
     if(this->travel[from-1][to-1].dist == GraphM::NOPATH) {
         std::cout << "      " << "---" << "         ";
         std::cout << from-1 << std::endl;
         std::cout << *this->data[from-1] << std::endl;
+        std::cout << std::endl;
         return;
     }
     // Otherwise print out of the path
@@ -149,19 +152,20 @@ void GraphM::display(int from, int to) const {
     int prev = this->travel[from-1][to-1].path;
     std::stack<int> path;
     while(prev != from-1) {
-    path.push(prev+1);
-    prev = this->travel[from-1][prev].path;
+        path.push(prev+1);
+        prev = this->travel[from-1][prev].path;
     }
     path.push(from);
-    data = path;
+    name = path;
     while(!path.empty()) {
         std::cout << path.top() << ' ';
         path.pop();
     }
     std::cout << '\n';
     // Print out the NodeData path
-    while(!data.empty()) {
-        std::cout << *this->data[data.top()] << std::endl;
-        data.pop();
+    while(!name.empty()) {
+        std::cout << *this->data[name.top()-1] << std::endl;
+        name.pop();
     }
+    std::cout << std::endl;
 }

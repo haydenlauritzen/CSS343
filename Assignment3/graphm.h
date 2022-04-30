@@ -37,7 +37,6 @@ class GraphM{
     GraphM();
     /**
      * @brief Deallocates NodeData
-     * 
      */
     ~GraphM();
 
