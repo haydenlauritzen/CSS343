@@ -31,12 +31,32 @@ class GraphL {
 
     public:
 
+    /**
+     * @brief Default Constructor
+     * @details 
+     * size is set to 0
+     * data is zero-initalized to a size of MAXNODES
+     */
     GraphL();
-    GraphL(std::ifstream&);
+    /**
+     * @brief Deconstructor
+     * @details Deallocates NodeData and EdgeNodes
+     */
     ~GraphL();
 
+    /**
+     * @brief Populates the graph with data nodes and edges.
+     * @param file std::ifstream& containing input file 
+     */
     void buildGraph(std::ifstream&);
+    /**
+     * @brief Displays the entire Graph
+     */
     void displayGraph() const;
+    /**
+     * @brief Runs the Depth First Search algoritm
+     * @post All GraphNodes are marked as visited.
+     */
     void depthFirstSearch();
 
 };
