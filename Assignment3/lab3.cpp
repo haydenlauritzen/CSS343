@@ -20,7 +20,6 @@ using namespace std;
 
 int main() {
 	
-	#if 1
 	// part 1
 	ifstream infile1("data31.txt");
 	if (!infile1) {
@@ -40,9 +39,7 @@ int main() {
 		G.display(1, 2);
 		G.display(1, 4);
 	}
-	#endif
 	
-	#if 0
 	// part 2 
 	ifstream infile2("data32.txt");
 	if (!infile2) {
@@ -59,7 +56,6 @@ int main() {
 		G.displayGraph();
 		G.depthFirstSearch();    // find and display depth-first ordering to cout
 	}
-	#endif
 	
 	cout << endl;
 	return 0;
