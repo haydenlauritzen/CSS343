@@ -1,7 +1,7 @@
 #include"graphm.h"
-#include<cstring>
-#include<algorithm> 
-#include<stack>
+#include<cstring> // string parsing
+#include<algorithm> // string parsing
+#include<stack> // output formatting
 
 GraphM::GraphM() : data{}, size(0), travel{} {
     for(int i = 0; i < MAXNODES; ++i) {
@@ -27,6 +27,7 @@ GraphM::~GraphM() {
 
 void GraphM::buildGraph(std::ifstream& file) {
     std::string line;
+    // Filter out empty lines and carriage returns if present.
     if(file.eof()) return;
     do {
         std::getline(file, line);
