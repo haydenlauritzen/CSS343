@@ -4,10 +4,6 @@
 
 GraphL::GraphL() : data{}, size(0) {}
 
-GraphL::GraphL(std::ifstream& file) {
-    buildGraph(file);
-}
-
 GraphL::~GraphL() {
     for(int i = 0; i < this->size; ++i) {
         // Deallocate NodeData
