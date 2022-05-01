@@ -5,10 +5,10 @@
 
 class GraphM{
 
+    private: 
+
     static const int MAXNODES = 100;
     static const int NOPATH = INT32_MAX;
-
-    private: 
 
     struct TableType {
         bool visited;          // whether node has been visited

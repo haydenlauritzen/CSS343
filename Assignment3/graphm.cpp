@@ -1,7 +1,7 @@
 #include"graphm.h"
-#include<cstring>
-#include<algorithm> 
-#include<stack>
+#include<cstring> // string parsing
+#include<algorithm> // string parsing
+#include<stack> // output formatting
 
 GraphM::GraphM() : data{}, size(0), travel{} {
     for(int i = 0; i < MAXNODES; ++i) {
@@ -27,6 +27,7 @@ GraphM::~GraphM() {
 
 void GraphM::buildGraph(std::ifstream& file) {
     std::string line;
+    // Filter out empty lines and carriage returns if present.
     if(file.eof()) return;
     do {
         std::getline(file, line);
@@ -109,12 +110,20 @@ void GraphM::displayAll() const {
         for(int j = 0; j < this->size; ++j) {
             if(i == j) continue;
             std::cout << "                               " << i+1 << "       " << j+1; 
+            // If no path present
             if(this->travel[i][j].dist == GraphM::NOPATH) {
-                std::cout << "      " << "0" << "         ";
+                std::cout << "      " << "---" << "         ";
                 std::cout << i << std::endl;
                 continue;
             }
-            std::cout << "      " << this->travel[i][j].dist << "          ";
+            // Formatting
+            if(this->travel[i][j].dist < 10) {
+                std::cout << "      " << this->travel[i][j].dist << "           ";
+            }
+            else {
+                std::cout << "      " << this->travel[i][j].dist << "          ";
+            }
+            // Parse through path
             int prev = this->travel[i][j].path;
             std::stack<int> path;
             while(prev != i) {
@@ -122,6 +131,7 @@ void GraphM::displayAll() const {
                 prev = this->travel[i][prev].path;
             }
             path.push(i+1);
+            // Print path backwards
             while(!path.empty()) {
                 std::cout << path.top() << ' ';
                 path.pop();
@@ -134,16 +144,17 @@ void GraphM::displayAll() const {
 
 void GraphM::display(int from, int to) const {
     if(from > this->size || to > this->size) { 
-        std::cout << "Node is not in Graph.\n";
+        int node = from > to ? from : to;
+        std::cout << "Node " << node << " is not in Graph.\n";
         std::cout << std::endl;
         return;
     }
+    std::cout << "From " << *this->data[from-1] << " to " << *this->data[to-1] << "\n";
     // If no path was present
     std::stack<int> name;
     if(this->travel[from-1][to-1].dist == GraphM::NOPATH) {
-        std::cout << "      " << "---" << "         ";
-        std::cout << from-1 << std::endl;
-        std::cout << *this->data[from-1] << std::endl;
+        std::cout << "  " << "There is no path.\n";
+
         std::cout << std::endl;
         return;
     }
@@ -164,8 +175,9 @@ void GraphM::display(int from, int to) const {
     std::cout << '\n';
     // Print out the NodeData path
     while(!name.empty()) {
-        std::cout << *this->data[name.top()-1] << std::endl;
+        std::cout << "  " << *this->data[name.top()-1] << '\n';
         name.pop();
     }
+    std::cout << "  " << *this->data[to-1] << '\n';
     std::cout << std::endl;
 }
