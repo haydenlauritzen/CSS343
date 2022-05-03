@@ -6,15 +6,9 @@
 GraphM::GraphM() : data{}, size(0), travel{} {
     for(int i = 0; i < MAXNODES; ++i) {
         for(int j = 0; j < MAXNODES; ++j) {
-            cost[i][j] = NOPATH;
-        }
-    }
-    for(int i = 0; i < MAXNODES; ++i) {
-        for(int j = 0; j < MAXNODES; ++j) {
-            // Initalize all TableType values
-            // travelInfo[i][j].visited = false;
+            // Initalization to INT32_MAX
+            cost[i][j] = NOPATH;   
             travel[i][j].dist = NOPATH;
-            // travelInfo[i][j].path = 0;
         }
     }
 }
