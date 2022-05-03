@@ -27,7 +27,7 @@ class GraphM{
      * @brief Construct a new Graph
      * @details 
      * data is zero-initalized
-     * cost is zero-initalized
+     * cost is initalized to NOPATH
      * size is zero-initalized
      * travelInfo is initialized: 
      *      dist to NOPATH
