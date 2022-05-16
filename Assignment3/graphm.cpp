@@ -1,3 +1,14 @@
+/**
+ * @file graphm.cpp
+ * @author Hayden Lauritzen (haydenlauritzen@gmail.com)
+ * @brief Implementation file for Matrix-implementation Graph
+ * @version 0.1
+ * @date 2022-05-01
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include"graphm.h"
 #include<cstring> // string parsing
 #include<algorithm> // string parsing
@@ -6,15 +17,9 @@
 GraphM::GraphM() : data{}, size(0), travel{} {
     for(int i = 0; i < MAXNODES; ++i) {
         for(int j = 0; j < MAXNODES; ++j) {
-            cost[i][j] = NOPATH;
-        }
-    }
-    for(int i = 0; i < MAXNODES; ++i) {
-        for(int j = 0; j < MAXNODES; ++j) {
-            // Initalize all TableType values
-            // travelInfo[i][j].visited = false;
+            // Initalization to INT32_MAX
+            cost[i][j] = NOPATH;   
             travel[i][j].dist = NOPATH;
-            // travelInfo[i][j].path = 0;
         }
     }
 }

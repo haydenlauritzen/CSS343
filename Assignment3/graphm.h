@@ -1,3 +1,13 @@
+/**
+ * @file graphm.h
+ * @author Hayden Lauritzen (haydenlauritzen@gmail.com)
+ * @brief Header file for Matrix-implementation Graph
+ * @version 0.1
+ * @date 2022-05-01
+ * 
+ * @copyright Copyright (c) 2022
+ */
+
 #pragma once
 
 #include<iostream>
@@ -27,7 +37,7 @@ class GraphM{
      * @brief Construct a new Graph
      * @details 
      * data is zero-initalized
-     * cost is zero-initalized
+     * cost is initalized to NOPATH
      * size is zero-initalized
      * travelInfo is initialized: 
      *      dist to NOPATH
