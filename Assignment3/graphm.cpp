@@ -1,3 +1,14 @@
+/**
+ * @file graphm.cpp
+ * @author Hayden Lauritzen (haydenlauritzen@gmail.com)
+ * @brief Implementation file for Matrix-implementation Graph
+ * @version 0.1
+ * @date 2022-05-01
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include"graphm.h"
 #include<cstring> // string parsing
 #include<algorithm> // string parsing

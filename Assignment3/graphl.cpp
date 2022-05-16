@@ -1,3 +1,14 @@
+/**
+ * @file graphl.cpp
+ * @author Hayden Lauritzen (haydenlauritzen@gmail.com)
+ * @brief Implementation file for List-implementation Graph
+ * @version 0.1
+ * @date 2022-05-02
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
 #include"graphl.h"
 #include<cstring> // string parsing
 #include<algorithm> // string parsing
@@ -90,17 +101,21 @@ void GraphL::displayGraph() const {
 
 void GraphL::depthFirstSearch() {
     std::cout << "Depth-first ordering: ";
+    // Lambda declaration
     auto h_depthFirstSearch = [&](GraphNode* cur, int idx, auto&& h_depthFirstSearch) {
         // Base Case, visited node
         if(cur->visited) return;
+        // Mark as visited
         cur->visited = true;
         std::cout << idx+1 << " ";
         GraphNode::EdgeNode* adj = cur->head;
+        // Recurse for all 
         while(adj != nullptr) {
             h_depthFirstSearch(&(this->data[adj->toNode]), adj->toNode, h_depthFirstSearch);
             adj = adj->next;
         }
     };
+    // Call lambda
     h_depthFirstSearch(&(this->data[0]), 0, h_depthFirstSearch);
     std::cout << std::endl;
 }
